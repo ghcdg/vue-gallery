@@ -1,6 +1,6 @@
 <template>
-    <div class="image-card">
-      <img :src="src" :alt="alt" :style="{ width: size, height: size }" />
+    <div class="image-card" @click="toggleFlip">
+      <img :src="src" :alt="alt" :style="{ width: width, height: height }" :class="{ 'flipped': isFlipped }" />
     </div>
   </template>
   
@@ -16,9 +16,23 @@
         type: String,
         default: ''
       },
-      size: {
+      width: {
         type: String,
-        default: '150px'
+        default: 'auto'
+      },
+      height: {
+        type: String,
+        default: 'auto'
+      }
+    },
+    data() {
+      return {
+        isFlipped: false
+      };
+    },
+    methods: {
+      toggleFlip() {
+        this.isFlipped = !this.isFlipped;
       }
     }
   }
@@ -26,20 +40,34 @@
   
   <style scoped>
   .image-card {
+    /* perspective: 1000px;
+    cursor: pointer; */
     display: inline-block;
     border-radius: 4px;
     overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
+    
+    transition: transform 0.68s ease;
   }
-  
+
   .image-card:hover {
-    transform: translateY(-5px);
+    box-shadow: 0px 3px 6px rgba(248, 247, 247, 0.986);
+    transform: translateY(-15px);
+
+    transition: transform 0.68s ease;
+
   }
   
   .image-card img {
     display: block;
-    object-fit: cover;
+    object-fit: contain;
+    transform-style: preserve-3d;
+    /* backface-visibility: hidden; */
+
+    transition: transform 0.68s;
+  }
+  
+  .image-card img.flipped {
+    transform: rotateY(180deg);
   }
   </style>
   

@@ -1,6 +1,6 @@
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
-import ImageCard from './components/ImageCard.V1.vue';
+import ImageCard from './components/ImageCard.vue';
 import TheWelcome from './components/TheWelcome.vue'
 
 </script>
@@ -14,7 +14,7 @@ import TheWelcome from './components/TheWelcome.vue'
     </div>
     <div>
       <ImageCard src="/src/assets/images/1.jpg" alt="示例图片" />
-      <!-- <ImageCard src="/src/assets/images/1.jpg" size="150px" alt="示例图片" /> -->
+      <!-- <ImageCard width="150px" height="150px" frontSrc="/src/assets/images/1.jpg"  backSrc="/src/assets/images/2.jpg" alt="示例图片" /> -->
     </div>
   </header>
 

@@ -1,25 +1,25 @@
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
-import ImageCard from './components/ImageCard.vue';
+import ImageGallery from './components/ImageGallery.vue';
 import TheWelcome from './components/TheWelcome.vue'
 
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+    <!-- <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
 
     <div class="wrapper">
       <HelloWorld msg="You did it!" />
-    </div>
-    <div>
-      <ImageCard src="/src/assets/images/1.jpg" alt="示例图片" />
-      <!-- <ImageCard width="150px" height="150px" frontSrc="/src/assets/images/1.jpg"  backSrc="/src/assets/images/2.jpg" alt="示例图片" /> -->
-    </div>
+    </div> -->
+
   </header>
 
   <main>
-    <TheWelcome />
+    <!-- <TheWelcome /> -->
+    <div class="image-gallery-container">
+      <ImageGallery />
+    </div>
   </main>
 </template>
 
@@ -33,7 +33,17 @@ header {
   margin: 0 auto 2rem;
 }
 
-@media (min-width: 1024px) {
+.image-gallery-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  /* height: 100%; */
+  /* vh 单位代表视窗（看到的浏览器窗口）的大小高度的百分比 */
+  height: 100vh;  
+}
+
+@media (min-width: 2048px) {
   header {
     display: flex;
     place-items: center;

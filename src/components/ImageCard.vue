@@ -46,24 +46,24 @@
     border-radius: 4px;
     overflow: hidden;
     
-    transition: transform 0.68s ease;
+    transition: transform 0.618s ease;
   }
 
   .image-card:hover {
-    box-shadow: 0px 3px 6px rgba(248, 247, 247, 0.986);
-    transform: translateY(-15px);
+    box-shadow: 0px 3px 6px rgba(230, 5, 5, 0.349);
+    transform: translateY(-16.18px) scale(1.068);
 
-    transition: transform 0.68s ease;
+    transition: transform 0.618s ease;
 
   }
   
   .image-card img {
     display: block;
-    object-fit: contain;
-    transform-style: preserve-3d;
+    object-fit: cover;
+    /* transform-style: preserve-3d; */
     /* backface-visibility: hidden; */
 
-    transition: transform 0.68s;
+    transition: transform 0.618s;
   }
   
   .image-card img.flipped {

@@ -1,6 +1,7 @@
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
 import ImageGallery from './components/ImageGallery.vue';
+import ImageBoard from './components/ImageBoard.vue';
 import TheWelcome from './components/TheWelcome.vue'
 
 </script>
@@ -18,7 +19,7 @@ import TheWelcome from './components/TheWelcome.vue'
   <main>
     <!-- <TheWelcome /> -->
     <div class="image-gallery-container">
-      <ImageGallery />
+      <ImageBoard />
     </div>
   </main>
 </template>

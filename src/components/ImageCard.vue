@@ -1,6 +1,6 @@
 <template>
-  <div class="image-card" :style="{ left: left, top: top }" @click="toggleFlip">
-    <img :src="src" :alt="alt" :style="{ width: width, height: height }" :class="{ 'flipped': isFlipped }" />
+  <div class="image-card" :style="{ left: image.left, top: image.top }" @click="toggleFlip">
+    <img :src="image.src" :alt="image.alt" :style="{ width: image.width, height: image.height }" :class="{ 'flipped': isFlipped }" />
   </div>
 </template>
 
@@ -8,29 +8,17 @@
 export default {
   name: 'ImageCard',
   props: {
-    src: {
-      type: String,
-      required: true
-    },
-    alt: {
-      type: String,
-      default: ''
-    },
-    width: {
-      type: String,
-      default: 'auto'
-    },
-    height: {
-      type: String,
-      default: 'auto'
-    },
-    left: {
-      type: String,
-      default: '10px'
-    },
-    top: {
-      type: String,
-      default: '10px'
+    image: {
+      type: Object,
+      required: true,
+      default: () => ({
+        src: '',
+        alt: '',
+        width: 'auto',
+        height: 'auto',
+        left: '10px',
+        top: '10px'
+      })
     }
   },
   data() {

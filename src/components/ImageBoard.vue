@@ -1,6 +1,6 @@
 <template>
   <div class="image-board">
-    <ImageCard :src="image.src" :alt="image.alt" :width="image.width" :height="image.height" :left="image.left" :top="image.top" />    
+    <ImageCard :image="image" />    
   </div>
 </template>
 
@@ -14,7 +14,7 @@ export default {
   },
   data() {
     return {
-      image: { src: '/src/assets/images/1.jpg', alt: '示例图片1', width: '100px', height: '100px', left: '10px', top: '100px' },
+      image: { src: '/src/assets/images/1.jpg', alt: '示例图片1', width: '100px', height: '100px', left: '10px', top: '100px' }
     }
   }
 }

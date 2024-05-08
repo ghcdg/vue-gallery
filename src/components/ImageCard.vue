@@ -43,19 +43,17 @@ export default {
   display: inline-block;
   border-radius: 4px;
   overflow: hidden;
-  transition: transform 0.618s ease;
+  transition: all 0.618s ease;
 }
 
 .image-card:hover {
   box-shadow: 0px 3px 6px rgba(230, 5, 5, 0.349);
   transform: translateY(-16.18px) scale(1.068);
-  transition: transform 0.618s ease;
 }
   
 .image-card img {
   display: block;
   object-fit: cover;
-  transition: transform 0.618s;
 }
 
 .image-card img.flipped {

@@ -1,6 +1,6 @@
 <template>
   <div class="image-board">
-    <ImageCard v-for="(image, index) in images" :key="index" :image="image" @click="swapImages(index)" />
+    <ImageCard v-for="(image, index) in images" :key="index" :image="image" @click="swapImages(index)" :style="{ top: image.top, left: image.left }" />
   </div>
 </template>
 
@@ -14,11 +14,16 @@ export default {
   },
   data() {
     return {
-      images: []
+      images: [],
+      defaultWidth: 100,
+      defaultHeight: 100,
     };
   },
   mounted() {
     this.images = this.generateImages();
+      // 将第一张图片放在界面的正中间
+      this.images[0].top = `${(window.innerHeight - this.defaultHeight) / 2}px`;
+      this.images[0].left = `${(window.innerWidth - this.defaultWidth) / 2}px`;
   },
   methods: {
     generateImages() {
@@ -27,10 +32,10 @@ export default {
         id: index,
         src: `/src/assets/images/${path}.jpg`,
         alt: `Image ${index + 1}`,
-        width: '100px',
-        height: '100px',
-        left: `${Math.floor(Math.random() * (window.innerWidth - 100))}px`,
-        top: `${Math.floor(Math.random() * (window.innerHeight - 100))}px`
+        width: `${this.defaultWidth}px`,
+        height: `${this.defaultHeight}px`,
+        left: `${Math.floor(Math.random() * (window.innerWidth - this.defaultWidth))}px`,
+        top: `${Math.floor(Math.random() * (window.innerHeight - this.defaultHeight))}px`
       }));
     },
     getRandomIndex(currentIndex, length) {
@@ -57,10 +62,8 @@ export default {
 
 <style scoped>
 .image-board {
-  display: flex;
+  position: relative;
   width: 100%;
   height: 100%;
-  justify-content: center;
-  align-items: center;
 }
 </style>

@@ -65,20 +65,42 @@ export default {
       });
     },
     swapImages(imageId) {
-      const imageIndex = this.images.findIndex(image => image.id === imageId);
-      const targetIndex = this.getRandomIndex(imageIndex, this.images.length);
-      const tempTop = this.images[imageIndex].top;
-      const tempLeft = this.images[imageIndex].left;
+      const selectedIndex = this.images.findIndex(image => image.id === imageId);
+      if (this.images[selectedIndex].area !== 'middle') return;
+      const targetIndex = this.getRandomIndex(selectedIndex, this.images.length);
+      const selectedImage = this.images[selectedIndex];
+      const targetImage = this.images[targetIndex];
 
-      this.images[imageIndex].top = this.images[targetIndex].top;
-      this.images[imageIndex].left = this.images[targetIndex].left;
+      const tempTop = targetImage.top;
+      const tempLeft = targetImage.left;
+      const tempArea = targetImage.area;
 
-      this.images[targetIndex].top = tempTop;
-      this.images[targetIndex].left = tempLeft;
+      targetImage.top = selectedImage.top;
+      targetImage.left = selectedImage.left;
+      targetImage.area = selectedImage.area;
 
-      this.leftImages = this.images.filter(image => image.area === 'left');
+      selectedImage.top = tempTop;
+      selectedImage.left = tempLeft;
+      selectedImage.area = tempArea;
+
+      if (tempArea === 'left') {
+        const insertIndex = this.leftImages.findIndex(image => image.id === targetImage.id);
+        this.leftImages.splice(insertIndex, 1);
+        this.leftImages.splice(insertIndex, 0, selectedImage);
+        console.log('left', this.leftImages)
+      }
+
       this.middleImage = this.images.find(image => image.area === 'middle');
-      this.rightImages = this.images.filter(image => image.area === 'right');
+
+      if (tempArea === 'right') {
+        const insertIndex = this.rightImages.findIndex(image => image.id === targetImage.id);
+        this.rightImages.splice(insertIndex, 1);
+        this.rightImages.splice(insertIndex, 0, selectedImage);
+        console.log('right', this.leftImages)
+      }
+
+
+
     },
     getRandomIndex(currentIndex, length) {
       let randomIndex = Math.floor(Math.random() * length);

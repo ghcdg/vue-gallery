@@ -1,9 +1,6 @@
 <template>
   <div class="image-board">
-
-      <ImageCard v-for="(image, index) in leftImages" :key="index" :image="image" @click="swapImages(image.id)" :style="{ top: image.top, left: image.left }" />
-      <ImageCard v-if="middleImage" :image="middleImage" @click="swapImages(middleImage.id)" :style="{ top: middleImage.top, left: middleImage.left }" />
-      <ImageCard v-for="(image, index) in rightImages" :key="index" :image="image" @click="swapImages(image.id)" :style="{ top: image.top, left: image.left }" />
+    <ImageCard v-for="(image, index) in images" :key="index" :image="image" @click="swapImages(image.id)" :style="{ top: image.top, left: image.left }" />
   </div>
 </template>
 
@@ -20,94 +17,108 @@ export default {
       images: [],
       leftImages: [],
       middleImage: null,
+      middleImageID: 0,
       rightImages: [],
       defaultWidth: 100,
       defaultHeight: 100,
       leftAreaWidth: window.innerWidth * 0.4,
       centerAreaWidth: window.innerWidth * 0.2,
-      rightAreaWidth: window.innerWidth * 0.4
+      rightAreaWidth: window.innerWidth * 0.4,
+
     };
   },
   mounted() {
+
     this.images = this.generateImages();
-    this.leftImages = this.images.filter(image => image.area === 'left');
-    this.middleImage = this.images.find(image => image.area === 'middle');
-    this.rightImages = this.images.filter(image => image.area === 'right');
+    this.images = this.shuffleArray(this.images);
+    var len = this.images.length;
+    var half = Math.ceil(len/2);
+
+    this.middleImage = this.generateMiddleImage(this.images[0]);
+    this.leftImages = this.generateLeftAreaImages(this.images.slice(1, half));
+    this.rightImages = this.generateRightAreaImages(this.images.slice(half, len));
+
+    this.middleImageID = this.middleImage.id;
+    this.images = this.leftImages.concat(this.middleImage).concat(this.rightImages);
+
   },
   methods: {
     generateImages() {
       const list = Array.from({ length: 15 }, (_, index) => index + 1);
-      return list.map((path, index) => {
-        let area;
-        if (index === 0) {
-          area = 'middle';
-        } else {
-          area = index % 2 === 0 ? 'left' : 'right';
-        }
-        let left;
-        if (area === 'left') {
-          left = `${Math.floor(Math.random() * (this.leftAreaWidth - this.defaultWidth))}px`;
-        } else if (area === 'right') {
-          left = `${this.leftAreaWidth + this.centerAreaWidth + Math.floor(Math.random() * (this.rightAreaWidth - this.defaultWidth))}px`;
-        } else {
-          left = `${(window.innerWidth - this.defaultWidth) / 2}px`;
-        }
+      return list.map((path, index) => {        
         return {
           id: index,
           src: `/src/assets/images/${path}.jpg`,
           alt: `Image ${index + 1}`,
           width: `${this.defaultWidth}px`,
           height: `${this.defaultHeight}px`,
-          left: left,
-          top: `${Math.floor(Math.random() * (window.innerHeight - this.defaultHeight))}px`,
-          area: area
+          left: `0px`,
+          top: `0px`
         };
       });
     },
-    swapImages(imageId) {
-      const selectedIndex = this.images.findIndex(image => image.id === imageId);
-      if (this.images[selectedIndex].area !== 'middle') return;
-      const targetIndex = this.getRandomIndex(selectedIndex, this.images.length);
-      const selectedImage = this.images[selectedIndex];
-      const targetImage = this.images[targetIndex];
 
-      const tempTop = targetImage.top;
-      const tempLeft = targetImage.left;
-      const tempArea = targetImage.area;
+    swapImages(selectedID) {
 
-      targetImage.top = selectedImage.top;
-      targetImage.left = selectedImage.left;
-      targetImage.area = selectedImage.area;
+      const selectedImage = this.images.find(image => image.id === selectedID);
+      if (selectedID === this.middleImageID) return;
+      
+      const targetImage = this.images.find(image => image.id === this.middleImageID);
 
-      selectedImage.top = tempTop;
-      selectedImage.left = tempLeft;
-      selectedImage.area = tempArea;
+      const tempTop = selectedImage.top;
+      const tempLeft = selectedImage.left;
 
-      if (tempArea === 'left') {
-        const insertIndex = this.leftImages.findIndex(image => image.id === targetImage.id);
-        this.leftImages.splice(insertIndex, 1);
-        this.leftImages.splice(insertIndex, 0, selectedImage);
-        console.log('left', this.leftImages)
-      }
+      selectedImage.top = targetImage.top;
+      selectedImage.left = targetImage.left;
 
-      this.middleImage = this.images.find(image => image.area === 'middle');
+      targetImage.top = tempTop;
+      targetImage.left = tempLeft;
 
-      if (tempArea === 'right') {
-        const insertIndex = this.rightImages.findIndex(image => image.id === targetImage.id);
-        this.rightImages.splice(insertIndex, 1);
-        this.rightImages.splice(insertIndex, 0, selectedImage);
-        console.log('right', this.leftImages)
-      }
-
-
-
+      this.middleImageID = selectedImage.id;
     },
-    getRandomIndex(currentIndex, length) {
-      let randomIndex = Math.floor(Math.random() * length);
-      while (randomIndex === currentIndex) {
-        randomIndex = Math.floor(Math.random() * length);
+
+    getRandomImage(images) {
+      return this.shuffleArray(images)[0];
+    },
+
+    generateMiddleImage(image) {
+      const left = `${(window.innerWidth - this.defaultWidth) / 2}px`;
+      const top = `${(window.innerHeight - this.defaultHeight) / 2}px`;
+      return {...image, left, top};
+    },
+
+    generateLeftAreaImages(images) {
+      return images.map(image => {
+        const left = `${Math.floor(Math.random() * (this.leftAreaWidth - this.defaultWidth))}px`;
+        const top = `${Math.floor(Math.random() * (window.innerHeight - this.defaultHeight))}px`;
+        return {...image, left, top};
+      });
+    },
+
+    generateRightAreaImages(images) {
+      return images.map(image => {
+        const left = `${this.leftAreaWidth + this.centerAreaWidth + Math.floor(Math.random() * (this.rightAreaWidth - this.defaultWidth))}px`;
+        const top = `${Math.floor(Math.random() * (window.innerHeight - this.defaultHeight))}px`;
+        return {...image, left, top};
+      });
+    },     
+    
+    /**
+     * shuffle array data
+     * @param {array} arr input array
+     * @returns {array}
+     */
+    shuffleArray(arr) {
+      // Create a new array to avoid mutating the original array
+      let newArr = arr.slice();
+
+      // Shuffle the new array using Fisher-Yates algorithm
+      for (let i = newArr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
       }
-      return randomIndex;
+
+      return newArr;
     }
   }
 };

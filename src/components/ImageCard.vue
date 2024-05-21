@@ -1,6 +1,6 @@
 <template>
-  <div class="image-card" :style="{ left: image.left, top: image.top }" @click="toggleFlip">
-    <img :src="image.src" :alt="image.alt" :style="{ width: image.width, height: image.height }" :class="{ 'flipped': isFlipped }" />
+  <div class="image-card" :style="cardStyle" @click="toggleFlip">
+    <img :src="image.src" :alt="image.alt" :style="imageStyle" :class="{ 'flipped': isFlipped }" />
   </div>
 </template>
 
@@ -26,15 +26,26 @@ export default {
       isFlipped: false
     };
   },
-  mounted() {
-    // No need to assign left and top here, as they are bound directly to props
+  computed: {
+    cardStyle() {
+      return {
+        left: this.image.left,
+        top: this.image.top
+      };
+    },
+    imageStyle() {
+      return {
+        width: this.image.width,
+        height: this.image.height
+      };
+    }
   },
   methods: {
     toggleFlip() {
       this.isFlipped = !this.isFlipped;
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -50,7 +61,7 @@ export default {
   box-shadow: 0px 3px 6px rgba(230, 5, 5, 0.349);
   transform: translateY(-16.18px) scale(1.068);
 }
-  
+
 .image-card img {
   display: block;
   object-fit: cover;

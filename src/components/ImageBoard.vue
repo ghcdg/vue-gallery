@@ -23,15 +23,22 @@ export default {
       middleImageID: 0,
       defaultWidth: 100,
       defaultHeight: 100,
-      leftAreaWidth: window.innerWidth * 0.4,
-      centerAreaWidth: window.innerWidth * 0.2,
-      rightAreaWidth: window.innerWidth * 0.4
+      leftAreaWidth: 40,  // Use percentage
+      centerAreaWidth: 20, // Use percentage
+      rightAreaWidth: 40  // Use percentage
     };
   },
   mounted() {
     this.initializeImages();
+    // window.addEventListener('resize', this.handleResize);
+  },
+  beforeUnmount() {
+    // window.removeEventListener('resize', this.handleResize);
   },
   methods: {
+    // handleResize() {
+    //   this.initializeImages();
+    // },
     initializeImages() {
       this.images = this.shuffleArray(this.generateImages());
 
@@ -51,8 +58,8 @@ export default {
         alt: `Image ${index + 1}`,
         width: `${this.defaultWidth}px`,
         height: `${this.defaultHeight}px`,
-        left: '0px',
-        top: '0px'
+        left: '0%',
+        top: '0%'
       }));
     },
     swapImages(selectedID) {
@@ -69,22 +76,23 @@ export default {
     generateMiddleImage(image) {
       return {
         ...image,
-        left: `${(window.innerWidth - this.defaultWidth) / 2}px`,
-        top: `${(window.innerHeight - this.defaultHeight) / 2}px`
+        left: '50%',
+        top: '50%',
+        transform: 'translate(-50%, -50%)'
       };
     },
     generateLeftAreaImages(images) {
       return images.map(image => ({
         ...image,
-        left: `${Math.random() * (this.leftAreaWidth - this.defaultWidth)}px`,
-        top: `${Math.random() * (window.innerHeight - this.defaultHeight)}px`
+        left: `${Math.random() * (this.leftAreaWidth - (this.defaultWidth / window.innerWidth * 100))}%`,
+        top: `${Math.random() * (100 - (this.defaultHeight / window.innerHeight * 100))}%`
       }));
     },
     generateRightAreaImages(images) {
       return images.map(image => ({
         ...image,
-        left: `${this.leftAreaWidth + this.centerAreaWidth + Math.random() * (this.rightAreaWidth - this.defaultWidth)}px`,
-        top: `${Math.random() * (window.innerHeight - this.defaultHeight)}px`
+        left: `${this.leftAreaWidth + this.centerAreaWidth + Math.random() * (this.rightAreaWidth - (this.defaultWidth / window.innerWidth * 100))}%`,
+        top: `${Math.random() * (100 - (this.defaultHeight / window.innerHeight * 100))}%`
       }));
     },
     shuffleArray(arr) {
@@ -101,7 +109,7 @@ export default {
 
 <style scoped>
 .image-board {
-  position: flex;
+  position: relative;
   width: 100%;
   height: 100%;
 }

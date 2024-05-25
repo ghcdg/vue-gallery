@@ -4,6 +4,7 @@
       v-for="(image, index) in images"
       :key="image.id"
       :image="image"
+      :style="{ width: defaultWidth + 'px', height: defaultHeight + 'px' }"
       @click="swapImages(image.id)"
     />
   </div>
@@ -21,24 +22,36 @@ export default {
     return {
       images: [],
       middleImageID: 0,
-      defaultWidth: 100,
-      defaultHeight: 100,
+      windowWidth: window.innerWidth,
       leftAreaWidth: 40,  // Use percentage
       centerAreaWidth: 20, // Use percentage
       rightAreaWidth: 40  // Use percentage
     };
   },
+  computed: {
+    defaultWidth() {
+      return this.windowWidth * 0.078;
+    },
+    defaultHeight() {
+      return this.windowWidth * 0.078;
+    }
+  },
   mounted() {
     this.initializeImages();
-    // window.addEventListener('resize', this.handleResize);
+    window.addEventListener('resize', this.handleResize);
   },
   beforeUnmount() {
-    // window.removeEventListener('resize', this.handleResize);
+    window.removeEventListener('resize', this.handleResize);
   },
   methods: {
-    // handleResize() {
-    //   this.initializeImages();
-    // },
+    handleResize() {
+      this.windowWidth = window.innerWidth;
+        // this.initializeImages();
+        this.images.forEach(image => {
+          image.width = `${this.defaultWidth}px`;
+          image.height = `${this.defaultHeight}px`;
+        });
+    },
     initializeImages() {
       this.images = this.shuffleArray(this.generateImages());
 
@@ -84,14 +97,14 @@ export default {
     generateLeftAreaImages(images) {
       return images.map(image => ({
         ...image,
-        left: `${Math.random() * (this.leftAreaWidth - (this.defaultWidth / window.innerWidth * 100))}%`,
+        left: `${Math.random() * (this.leftAreaWidth - (this.defaultWidth / this.windowWidth * 100))}%`,
         top: `${Math.random() * (100 - (this.defaultHeight / window.innerHeight * 100))}%`
       }));
     },
     generateRightAreaImages(images) {
       return images.map(image => ({
         ...image,
-        left: `${this.leftAreaWidth + this.centerAreaWidth + Math.random() * (this.rightAreaWidth - (this.defaultWidth / window.innerWidth * 100))}%`,
+        left: `${this.leftAreaWidth + this.centerAreaWidth + Math.random() * (this.rightAreaWidth - (this.defaultWidth / this.windowWidth * 100))}%`,
         top: `${Math.random() * (100 - (this.defaultHeight / window.innerHeight * 100))}%`
       }));
     },

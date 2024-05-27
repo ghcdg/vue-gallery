@@ -46,11 +46,12 @@ export default {
   methods: {
     handleResize() {
       this.windowWidth = window.innerWidth;
-        // this.initializeImages();
-        this.images.forEach(image => {
-          image.width = `${this.defaultWidth}px`;
-          image.height = `${this.defaultHeight}px`;
-        });
+      // this.initializeImages();
+      this.images = this.images.map(image => ({
+        ...image,
+        width: `${this.defaultWidth}px`,
+        height: `${this.defaultHeight}px`
+      }));
     },
     initializeImages() {
       this.images = this.shuffleArray(this.generateImages());

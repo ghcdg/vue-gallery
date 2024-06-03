@@ -1,12 +1,7 @@
 <template>
   <div class="image-board">
-    <ImageCard
-      v-for="(image, index) in images"
-      :key="image.id"
-      :image="image"
-      :style="{ width: defaultWidth + 'px', height: defaultHeight + 'px' }"
-      @click="swapImages(image.id)"
-    />
+    <ImageCard v-for="(image, index) in images" :key="image.id" :image="image"
+      :style="{ width: defaultWidth + 'px', height: defaultHeight + 'px' }" @click="imageCardClickHandler(image.id)" />
   </div>
 </template>
 
@@ -21,11 +16,11 @@ export default {
   data() {
     return {
       images: [],
-      middleImageID: 0,
+      middleImageId: 0,
       windowWidth: window.innerWidth,
       leftAreaWidth: 40,  // Use percentage
       centerAreaWidth: 20, // Use percentage
-      rightAreaWidth: 40  // Use percentage
+      rightAreaWidth: 40,  // Use percentage
     };
   },
   computed: {
@@ -44,9 +39,14 @@ export default {
     window.removeEventListener('resize', this.handleResize);
   },
   methods: {
+
+    imageCardClickHandler(selectedImageId) {
+      this.swapImages(selectedImageId);
+      // this.flipChild(selectedImageId);
+    },
+
     handleResize() {
       this.windowWidth = window.innerWidth;
-      // this.initializeImages();
       this.images = this.images.map(image => ({
         ...image,
         width: `${this.defaultWidth}px`,
@@ -62,12 +62,18 @@ export default {
       const leftImages = this.generateLeftAreaImages(this.images.slice(1, half));
       const rightImages = this.generateRightAreaImages(this.images.slice(half));
 
-      this.middleImageID = middleImage.id;
+      this.middleImageId = middleImage.id;
       this.images = leftImages.concat(middleImage, rightImages);
+
+      this.images = this.images.map(image => ({
+        ...image,
+        toFlipMe: image.id === this.middleImageId
+      }));
     },
     generateImages() {
       return Array.from({ length: 15 }, (_, index) => ({
         id: index,
+        toFlipMe: false,
         src: `/src/assets/images/${index + 1}.jpg`,
         alt: `Image ${index + 1}`,
         width: `${this.defaultWidth}px`,
@@ -76,17 +82,20 @@ export default {
         top: '0%'
       }));
     },
-    swapImages(selectedID) {
-      if (selectedID === this.middleImageID) return;
 
-      const selectedImage = this.images.find(image => image.id === selectedID);
-      const middleImage = this.images.find(image => image.id === this.middleImageID);
+    swapImages(selectedImageId) {
+      if (selectedImageId === this.middleImageId) return;
+
+      const selectedImage = this.images.find(image => image.id === selectedImageId);
+      const middleImage = this.images.find(image => image.id === this.middleImageId);
 
       [selectedImage.left, middleImage.left] = [middleImage.left, selectedImage.left];
       [selectedImage.top, middleImage.top] = [middleImage.top, selectedImage.top];
+      [selectedImage.toFlipMe, middleImage.toFlipMe] = [middleImage.toFlipMe, selectedImage.toFlipMe];
 
-      this.middleImageID = selectedImage.id;
+      this.middleImageId = selectedImage.id;
     },
+
     generateMiddleImage(image) {
       return {
         ...image,

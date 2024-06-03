@@ -1,5 +1,5 @@
 <template>
-  <div class="image-card" :style="cardStyle" @click="toggleFlip">
+  <div class="image-card" :style="cardStyle" @click="handleClick">
     <img :src="image.src" :alt="image.alt" :style="imageStyle" :class="{ 'flipped': isFlipped }" />
   </div>
 </template>
@@ -16,8 +16,9 @@ export default {
         alt: '',
         width: 'auto',
         height: 'auto',
-        left: '10px',
-        top: '10px'
+        left: '0px',
+        top: '0px',
+        toFlipMe: true,        
       })
     }
   },
@@ -40,10 +41,15 @@ export default {
       };
     }
   },
+  mounted() {
+    // console.log(this.image)
+  },
   methods: {
-    toggleFlip() {
-      this.isFlipped = !this.isFlipped;
-    }
+    handleClick() {
+      // if current image has flag "toFlipMe", use the flag
+      // if current image has no flag "toFlipMe", flip the image by default
+      this.isFlipped = (this.image.toFlipMe === false) ? this.isFlipped : !this.isFlipped;
+    },
   }
 };
 </script>
@@ -69,5 +75,11 @@ export default {
 
 .image-card img.flipped {
   transform: rotateY(180deg);
+  transition: all 0.618s ease;
+}
+
+.image-card img {
+  transform: rotateY(0deg);
+  transition: all 0.618s ease;
 }
 </style>
